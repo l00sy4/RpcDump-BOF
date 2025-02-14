@@ -194,10 +194,10 @@ extern "C" {
             		RpcStringFreeW(&String);
             	}
 
-		if(Annotation != nullptr)
-		{
-			RpcStringFreeW(&Annotation);
-		}
+				if(Annotation != nullptr)
+				{
+					RpcStringFreeW(&Annotation);
+				}
 		    
             	//
             	// Print binding
