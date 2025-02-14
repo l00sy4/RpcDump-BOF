@@ -161,7 +161,7 @@ extern "C" {
 
                 Status = UuidToStringW(&InterfaceId.Uuid, &String);
 
-                if (Status == RPC_S_OK && Annotation != nullptr)
+                if (Status == RPC_S_OK)
                 {
                     LPCWSTR CurrentProtocol{};
                     LPCSTR  CurrentProvider{};
@@ -191,11 +191,14 @@ extern "C" {
                     }
 
             		BeaconPrintf(CALLBACK_OUTPUT, "Protocol: %lS\nProvider: %hS\nUUID: %ws v%d.%d %ws", CurrentProtocol, CurrentProvider, String, InterfaceId.VersMajor, InterfaceId.VersMinor, Annotation);
-
-            		RpcStringFreeW(&Annotation);
             		RpcStringFreeW(&String);
             	}
 
+		if(Annotation != nullptr)
+		{
+			RpcStringFreeW(&Annotation);
+		}
+		    
             	//
             	// Print binding
             	//
