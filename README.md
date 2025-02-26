@@ -15,3 +15,7 @@ The BOF takes three arguments:
 ```
 rpcdump ncacn_ip_tcp localhost
 ```
+
+```
+rpcdump ncacn_np \\target use-auth
+```
