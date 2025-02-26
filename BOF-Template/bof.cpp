@@ -68,8 +68,8 @@ extern "C" {
         do
         {
             //
-	       // Create the real binding
-	       //
+	    // Create the real binding
+	    //
 
             Status = RpcBindingFromStringBindingW(StringBinding, &BindingHandle);
 
