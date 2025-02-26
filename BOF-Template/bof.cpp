@@ -46,35 +46,10 @@ extern "C" {
 
         BeaconDataParse(&Parser, Arguments, Length);
 
-        CONST AUTO   Server{ reinterpret_cast<RPC_WSTR>(BeaconDataExtract(&Parser, nullptr)) };
-        CONST USHORT Port  { static_cast<USHORT>(BeaconDataShort(&Parser)) };
-
-        RPC_WSTR ProtocolSequence{};
-
-        switch (Port)
-        {
-			case 445:
-	        case 139:
-	        {
-                ProtocolSequence = (RPC_WSTR)L"ncacn_np";
-                break;
-	        }
-
-			case 443:
-            case 593:
-            {
-                ProtocolSequence = (RPC_WSTR)L"ncacn_http";
-                break;
-            }
-
-			case 135:
-			default:
-            {
-                ProtocolSequence = (RPC_WSTR)L"ncacn_ip_tcp";
-                break;
-            }
-        }
-
+        CONST AUTO Server          { reinterpret_cast<RPC_WSTR>(BeaconDataExtract(&Parser, nullptr)) };
+        CONST AUTO ProtocolSequence{ reinterpret_cast<RPC_WSTR>(BeaconDataExtract(&Parser, nullptr)) };
+        CONST INT  Authenticate    { BeaconDataInt(&Parser) };
+		
         //
         // Compose the string binding
         //
@@ -93,8 +68,8 @@ extern "C" {
         do
         {
             //
-			// Create the real binding
-			//
+	    // Create the real binding
+	    //
 
             Status = RpcBindingFromStringBindingW(StringBinding, &BindingHandle);
 
@@ -105,12 +80,12 @@ extern "C" {
             }
 
             //
-            // Authenticate using the current identity. Not needed for port 135 and 593
+            // Authenticate using the current identity if the respective flag was set. Otherwise, the binding will be anonymous
             //
 
-            if (Port != 135 && Port != 493)
+            if (Authenticate == TRUE)
             {
-            	Status = RpcBindingSetAuthInfoW(BindingHandle, nullptr, RPC_C_AUTHN_LEVEL_PKT_PRIVACY, RPC_C_AUTHN_WINNT, nullptr, RPC_C_AUTHZ_NONE);
+            	Status = RpcBindingSetAuthInfoW(BindingHandle, nullptr, RPC_C_AUTHN_LEVEL_PKT_PRIVACY, RPC_C_AUTHN_GSS_NEGOTIATE, nullptr, RPC_C_AUTHZ_NONE);
 
                 if (Status != RPC_S_OK)
                 {
