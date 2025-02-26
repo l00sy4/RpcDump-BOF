@@ -214,7 +214,7 @@ extern "C" {
 
 INT wmain(INT argc, PWCHAR argv[])
 {
-    bof::runMocked(go, argv[1], static_cast<USHORT>(_wtoi(argv[2])));
+    bof::runMocked(go, L"localhost", L"ncacn_ip_tcp", FALSE);
     return 0;
 }
 
